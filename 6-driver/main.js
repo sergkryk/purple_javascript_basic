@@ -1,7 +1,7 @@
-let hasLicense = true;
-let age = 17;
-let isDrunk = false;
+const hasLicense = true;
+const age = 17;
+const isDrunk = false;
 
-let message = hasLicense && age >= 18 && !isDrunk;
+const message = hasLicense && age >= 18 && !isDrunk;
 
 console.log(message ? "Может" : "Не может");
