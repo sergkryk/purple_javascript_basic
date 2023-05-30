@@ -1,4 +1,4 @@
-let userLang = prompt("Укажите язык...");
+const userLang = prompt("Укажите язык...");
 
 switch (userLang) {
   case "ru":
