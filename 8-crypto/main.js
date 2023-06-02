@@ -1,25 +1,26 @@
 function crypto(password) {
-  /*алгоритм
-	последнее с предпоследней
-	первое со второй
-	третье с третьей с конца
-	*/
   if (typeof password !== "string" || password.length < 6) {
     return null;
   }
-  const initial = password.split("");
-  const clone = initial.slice();
+  const passLengthEqualTwo = password.length - (password.length % 2);
+  const chars = password.split("");
 
-  initial[initial.length - 1] = clone[clone.length - 2];
-  initial[initial.length - 2] = clone[clone.length - 1];
+  for (let i = 0; i < passLengthEqualTwo; i += 2) {
+    const a = chars[i];
+    const b = chars[i + 1];
 
-  initial[0] = clone[1];
-  initial[1] = clone[0];
+    chars[i] = b;
+    chars[i + 1] = a;
+  }
 
-  initial[2] = clone[clone.length - 3];
-  initial[initial.length - 3] = clone[2];
+  for (let i = 0; i < passLengthEqualTwo / 2; i++) {
+    const a = chars[i];
+    const b = chars[passLengthEqualTwo - (1 + i)];
 
-  return initial.join("");
+    chars[i] = b;
+    chars[passLengthEqualTwo - (1 + i)] = a;
+  }
+  return chars.join("");
 }
 
 function check(crypted, original) {
@@ -27,4 +28,6 @@ function check(crypted, original) {
   return decrypted === original;
 }
 
-console.log(check("ajiascrvtp", "javascript"));
+console.log(check("ltsathwirdwosspangloryve", "verylongpasswordwithsalt"));
+console.log(check("sspaetcrses", "secretpasss"));
+console.log(crypto("secretpasss"));
