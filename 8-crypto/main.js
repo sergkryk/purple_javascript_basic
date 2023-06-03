@@ -1,26 +1,23 @@
 function crypto(password) {
-  if (typeof password !== "string" || password.length < 6) {
+  if (typeof password !== "string" || password.length < 8) {
     return null;
   }
-  const passLengthEqualTwo = password.length - (password.length % 2);
   const chars = password.split("");
+  const half = Math.floor(chars.length / 2)
+  const partOne = chars.slice(0, half)
+  const partTwo = chars.slice(half)
 
-  for (let i = 0; i < passLengthEqualTwo; i += 2) {
-    const a = chars[i];
-    const b = chars[i + 1];
+  const reversed = partOne.reduceRight((acc, el) => {
+    acc.push(el);
+    return acc;
+  }, []);
 
-    chars[i] = b;
-    chars[i + 1] = a;
-  }
+  const replaced = partTwo.reduce((acc, el, elIndex, elements) => {
+    acc[elements.length - (1 + elIndex)] = el;
+    return acc;
+  }, [])
 
-  for (let i = 0; i < passLengthEqualTwo / 2; i++) {
-    const a = chars[i];
-    const b = chars[passLengthEqualTwo - (1 + i)];
-
-    chars[i] = b;
-    chars[passLengthEqualTwo - (1 + i)] = a;
-  }
-  return chars.join("");
+  return [...replaced, ...reversed].join('');
 }
 
 function check(crypted, original) {
@@ -28,6 +25,5 @@ function check(crypted, original) {
   return decrypted === original;
 }
 
-console.log(check("ltsathwirdwosspangloryve", "verylongpasswordwithsalt"));
-console.log(check("sspaetcrses", "secretpasss"));
-console.log(crypto("secretpasss"));
+console.log(check("tlashtiwdrowssapgnolyrev", "verylongpasswordwithsalt"));
+console.log(check("drowssap", "password"));
