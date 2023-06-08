@@ -7,10 +7,11 @@ function crypto(password) {
   const partOne = chars.slice(0, half)
   const partTwo = chars.slice(half)
 
-  const reversed = partOne.reduceRight((acc, el) => {
-    acc.push(el);
-    return acc;
-  }, []);
+  // const reversed = partOne.reduceRight((acc, el) => {
+  //   acc.push(el);
+  //   return acc;
+  // }, []);
+  const reversed = partOne.reverse();
 
   const replaced = partTwo.reduce((acc, el, elIndex, elements) => {
     acc[elements.length - (1 + elIndex)] = el;
