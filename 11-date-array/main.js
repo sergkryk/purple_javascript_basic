@@ -12,6 +12,27 @@ const parsed = [
   "29/02/1998",
 ];
 
+const parsed2 = [
+  "DD-MM-YYYY",
+  "MM/DD/YYYY",
+  "31-12-1990",
+  "12/31/1990",
+  "10-02-2022",
+  "29-02-2022",
+  "30-02-2022",
+  "31-02-2022",
+  "test",
+  5,
+  "11/12/2023",
+  "00/13/2022",
+  "41/12/2023",
+  "41/-12/2023",
+  "aaaa/bbbb/vvvv",
+  "//",
+  [],
+  "",
+];
+
 function isDay(day) {
   return day > 0 && day <= 31;
 }
@@ -26,6 +47,9 @@ function isLeapYear(year) {
 }
 
 function isValidDate(string) {
+  if (typeof string !== "string") {
+    return null;
+  }
   if (string.split("-").length === 3) {
     const [day, month, year] = string.split("-");
     return [Number(day), Number(month), Number(year)];
@@ -48,7 +72,7 @@ function formatDate(arr) {
 
 const monthsHaving30days = [4, 6, 9, 11];
 
-const dates = parsed.reduce((acc, stringToCheck) => {
+const dates = parsed2.reduce((acc, stringToCheck) => {
   if (!isValidDate(stringToCheck)) {
     return acc;
   }
@@ -70,7 +94,7 @@ const dates = parsed.reduce((acc, stringToCheck) => {
     if (day === 29 && month === 2 && !isLeap) {
       return acc;
     }
-    
+
     acc.push(formatDate([day, month, year]));
     return acc;
   }
