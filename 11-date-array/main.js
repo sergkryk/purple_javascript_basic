@@ -8,91 +8,73 @@ const parsed = [
   "30/02/2020",
   "30/02/test",
   "31.04.2023",
-  "29/02/1996",
+  "02/29/1996",
   "29/02/1998",
 ];
 
-// const dates = parsed.reduce((acc, stringToCheck) => {
-//   if (Date.parse(stringToCheck)) {
-//     const milliseconds = Date.parse(stringToCheck);
-//     const date = new Date(milliseconds).toLocaleDateString("ru-RU");
-//     acc.push(date);
-//     return acc;
-//   }
-//   return acc;
-// }, []);
+function isDay(day) {
+  return day > 0 && day <= 31;
+}
+function isMonth(month) {
+  return month > 0 && month <= 12;
+}
+function isYear(year) {
+  return year > 0 && year <= 2023;
+}
+function isLeapYear(year) {
+  return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+}
 
-// console.log(dates);
+function isValidDate(string) {
+  if (string.split("-").length === 3) {
+    const [day, month, year] = string.split("-");
+    return [Number(day), Number(month), Number(year)];
+  } else if (string.split("/").length === 3) {
+    const [month, day, year] = string.split("/");
+    return [Number(day), Number(month), Number(year)];
+  } else {
+    return null;
+  }
+}
 
-// Учитывая, что курс для новичков и я ничего не знаю про регулярные выражения и объект Date, пробую реализовать данную функцию используя полученные знания.
-// Пробую перебирать даты методом reduce, мне кажется он больше всего подойдёт для данной цели. В качестве аккумулятора использую пустой массив в который буду складывать валидные даты.
-const datesV2 = parsed.reduce((acc, stringToCheck) => {
-  // константы для ограничения периода лет, ограничил самостоятельно т.к. в ТЗ ничего про это не говорится.
-  const MIN_YEAR = 1990;
-  const MAX_YEAR = 2023;
-  // массив для проверки на 30 дней
-  const monthsHaving30days = [4, 6, 9, 11];
-  // массив високосных годов
-  const leapYears = [
-    1992, 1996, 2000, 2004, 2008, 2012, 2016, 2020, 2024, 2028,
-  ];
-  // для проверки принимаю решение разбить каждую строку на массив символов
-  const chars = stringToCheck.split("");
-  /* 
-  проверять буду только строки длиной 10 символов (в ТЗ не указано, поэтому ограничиваю даты следующим форматом dd/mm/yyyy, разделитель может быть любой, главное чтобы он был)
-  если не ограничивать то количество проверок возрастёт в разы. 
-  */
-  if (chars.length !== 10) {
-    return acc;
-  }
-  // получаю из массива день, месяц и год
-  let day = Number(chars.slice(0, 2).join(""));
-  let month = Number(chars.slice(3, 5).join(""));
-  let year = Number(chars.slice(6).join(""));
+function formatDate(arr) {
+  let [day, month, year] = arr;
 
-  // проверяю чтобы каждый элемент был числом
-  if (!day || !month || !year) {
-    return acc;
-  }
-  // данной проверкой пробую отловить подобные даты 02.26.2023, хотя толку от этого мало т.к. если не привязыаться к формату dd/mm/yyyy то всё равно невозможно определить например вот такое 03.04.2000 (3 апреля или 4 марта)
-  // if (day > 1 && day <= 12 && month > 1 && month <= 31) {
-  // }
-
-  // простейшая проверка даты
-  if (day < 1 || day > 31) {
-    return acc;
-  }
-  // простейшая проверка месяца
-  if (month < 1 || month > 12) {
-    return acc;
-  }
-  //  простейшая проверка года
-  if (year < MIN_YEAR || year > MAX_YEAR) {
-    return acc;
-  }
-  // проверяю дату на месяца, в которых только 30 дней, для этого в шапке функции создал массив включающий номера месяцев в которых 30 дней.
-  if (day === 31 && monthsHaving30days.includes(month)) {
-    return acc;
-  }
-  // проверка на 30 или 31 февраля
-  if (day > 29 && month === 2) {
-    return acc;
-  }
-  // проверка на 29 февраля в не високосный год, для этого также заранее создал массив с високосными годами.
-  if (day === 29 && month === 2 && !leapYears.includes(year)) {
-    return acc;
-  }
-  // привожу к форматированию согласно ТЗ
   day = day < 10 ? `0${day}` : day;
   month = month < 10 ? `0${month}` : month;
 
-  acc.push(`${day}.${month}.${year}`);
+  return `${day}.${month}.${year}`;
+}
+
+const monthsHaving30days = [4, 6, 9, 11];
+
+const dates = parsed.reduce((acc, stringToCheck) => {
+  if (!isValidDate(stringToCheck)) {
+    return acc;
+  }
+
+  let [day, month, year] = isValidDate(stringToCheck);
+
+  if (isDay(day) && isMonth(month) && isYear(year)) {
+    const isLeap = isLeapYear(year);
+    const isShortMonth = monthsHaving30days.includes(month);
+
+    if (day === 31 && isShortMonth) {
+      return acc;
+    }
+
+    if (day > 29 && month === 2) {
+      return acc;
+    }
+
+    if (day === 29 && month === 2 && !isLeap) {
+      return acc;
+    }
+    
+    acc.push(formatDate([day, month, year]));
+    return acc;
+  }
   return acc;
 }, []);
 
-console.log(datesV2);
-
-/*
-Возможно я ошибаюсь но такое количество проверок это перебор и подобные задания нужно выполнять с помощью регулярных выражений или библиотек или встроенных в язык инструментов, например объекта Date.
-Очень хотелось бы получить ответ с примером что задумывал автор давая такое задание т.к. считаю что выполнил его только частично верно.
-*/
+console.log(dates);
