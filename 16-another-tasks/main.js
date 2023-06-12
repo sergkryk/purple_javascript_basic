@@ -12,11 +12,12 @@ const taskList = {
     this.tasks = filtered;
   },
   update: function (id, task) {
-    this.tasks.map((el) => {
+    for (let el of this.tasks) {
       if (el.id === id) {
         Object.assign(el, task);
+        break;
       }
-    });
+    }
   },
   sort: function () {
     const sorted = this.tasks.slice().sort((a, b) => {
