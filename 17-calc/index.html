@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Калькулятор</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="calc">
+      <div class="calc_inputs">
+        <div class="calc_input-container">
+          <label class="calc_label" for="num1">Число</label>
+          <input class="calc_input" type="text" name="num1" id="num1" />
+        </div>
+        <div class="calc_input-container">
+          <label class="calc_label" for="num2">Число</label>
+          <input class="calc_input" type="text" name="num2" id="num2" />
+        </div>
+      </div>
+      <div class="calc_buttons">
+        <button class="calc_button calc_button--add" data-calc="add">Прибавить</button>
+        <button class="calc_button calc_button--substract" data-calc="substract">Отнять</button>
+        <button class="calc_button calc_button--multiple" data-calc="multiply">Умножить</button>
+        <button class="calc_button calc_button--divide" data-calc="divide">Разделить</button>
+      </div>
+      <p class="calc_result">Итого:</p>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>
