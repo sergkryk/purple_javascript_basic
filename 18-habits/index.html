@@ -147,39 +147,30 @@
         <section class="tracker">
           <div class="tracker__habbit habbit">
             <div class="habbit__header">
-              <h1 class="habbit__title">Отжимания</h1>
-              <div class="habbit__bar"></div>
-              <ul class="habbit__days">
-                <li class="habbit__day">
-                  <p class="habbit__counter">День 1</p>
-                  <div class="habbit__body">
-                    <p class="habbit__comment">
-                      Первый подход всегда даётся тяжело
-                    </p>
-                    <button type="button" class="habbit__delete">
-                      <svg width="18" height="19" fill="none">
-                        <use xlink:href="#icon-trash"></use>
+              <h1 class="habbit__title"></h1>
+              <div class="habbit__bar bar">
+                <span class="bar__title">Прогресс</span>
+                <span class="bar__percent"></span>
+                <span class="bar__indicator"></span>
+              </div>
+            </div>
+            <ul class="habbit__days">
+            </ul>
+            <div class="habbit__day">
+              <p class="habbit__counter js-counter">День 1</p>
+              <div class="habbit__body">
+                <form class="habbit__form">
+                  <div class="habbit__input-wrapper">
+                    <input type="text" name="comment" id="comment" />
+                    <label for="comment">
+                      <svg width="18" height="18" fill="none">
+                        <use xlink:href="#icon-comment"></use>
                       </svg>
-                    </button>
+                      <span>Комментарий</span>
+                    </label>
                   </div>
-                </li>
-              </ul>
-              <div class="habbit__day">
-                <p class="habbit__counter js-counter">День 2</p>
-                <div class="habbit__body">
-                  <form class="habbit__form">
-                    <div class="habbit__input-wrapper">
-                      <input type="text" name="comment" id="comment" />
-                      <label for="comment">
-                        <svg width="18" height="18" fill="none">
-                          <use xlink:href="#icon-comment"></use>
-                        </svg>
-                        <span>Комментарий</span>
-                      </label>
-                    </div>
-                    <button type="submit" class="habbit__submit">Готово</button>
-                  </form>
-                </div>
+                  <button type="submit" class="habbit__submit">Готово</button>
+                </form>
               </div>
             </div>
           </div>

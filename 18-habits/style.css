@@ -6,6 +6,10 @@ body {
   font-family: "Comfortaa", cursive;
 }
 
+form[disabled="true"] {
+  opacity: 0.3;
+}
+
 .wrapper {
   max-width: 1012px;
   margin: 0 auto;
@@ -42,8 +46,73 @@ body {
   padding: 45px 41px;
 }
 
+.habbit__header {
+  margin-bottom: 36px;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.bar {
+  display: grid;
+  grid-template-areas:
+    "a b"
+    "c c";
+  grid-template-columns: 200px 25px;
+  justify-content: left;
+
+  grid-row-gap: 12px;
+}
+.bar > * {
+  align-self: start;
+}
+.bar__title {
+  grid-area: a;
+
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+
+  color: #232360;
+}
+.bar__percent {
+  grid-area: b;
+  margin-top: 3px;
+
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 13px;
+
+  color: #768396;
+
+  justify-self: right;
+}
+.bar__indicator {
+  --barWidth: 0%;
+  grid-area: c;
+
+  position: relative;
+
+  width: 100%;
+  height: 5px;
+  background: #e6e9ed;
+  border-radius: 4px;
+}
+.bar__indicator::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+
+  height: 100%;
+  width: var(--barWidth);
+  background: #5051f9;
+  border-radius: 4px;
+}
+
 .habbit__title {
-  margin: 0 0 36px;
+  margin: 0;
   padding: 0;
 
   font-family: "Comfortaa";
@@ -228,7 +297,7 @@ body {
   box-shadow: 0px 8px 14px rgba(62, 107, 224, 0.12);
   border-radius: 14px;
 
-  color: #5051F9;
+  color: #5051f9;
 }
 .nav__item--active {
   background-color: #5051f9;
@@ -406,14 +475,14 @@ body {
   width: 100%;
   height: 1.5px;
 
-  background-color: #5051F9;
+  background-color: #5051f9;
 
   transform-origin: center;
 }
 
 .add__close::before {
-  transform: rotate(45deg)
+  transform: rotate(45deg);
 }
 .add__close::after {
-  transform: rotate(-45deg)
+  transform: rotate(-45deg);
 }

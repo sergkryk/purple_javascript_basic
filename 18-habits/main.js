@@ -10,28 +10,41 @@ const modal = document.querySelector(".modal");
 const closeModalButton = document.querySelector(".add__close");
 // форма добавления дня в привычку
 const dayForm = document.querySelector(".habbit__form");
+// кнопка отправки формы добавления дня в привычку
+const dayFormSubmit = document.querySelector(".habbit__submit");
+// инпут формы добавления дня в привычку
+const dayFormInput = dayForm.querySelector("#comment");
 // основной заголовок ------------------------------------------
 const mainTitle = document.querySelector(".habbit__title");
+// процент выполнения ------------------------------------------
+const percent = document.querySelector(".bar__percent");
+// индикатор выполнения ------------------------------------------
+const indicator = document.querySelector(".bar__indicator");
+
 // Выбранная привычка -----------------------------------------
 let activeDomNode = "";
 let activeElement = "";
 
-const habbits = [
-  {
-    id: 1687273794339,
-    title: "Отжимания",
-    aim: "Научится отжиматься",
-    icon: "dumble",
-    days: ["Первый подход всегда даётся тяжело"],
-  },
-  {
-    id: 1687273864156,
-    title: "Чтение",
-    aim: "Читать не менее 30 минут в день",
-    icon: "bottle",
-    days: ["Прочитал 20 страниц", "Начал читать новую интересную книгу"],
-  },
-];
+const DAYS_TO_FINISH = 21;
+
+const habbits = JSON.parse(localStorage.getItem("habbits")) || [];
+
+// const habbits = [
+//   {
+//     id: 1687273794339,
+//     title: "Отжимания",
+//     aim: "Научится отжиматься",
+//     icon: "dumble",
+//     days: ["Первый подход всегда даётся тяжело"],
+//   },
+//   {
+//     id: 1687273864156,
+//     title: "Чтение",
+//     aim: "Читать не менее 30 минут в день",
+//     icon: "bottle",
+//     days: ["Прочитал 20 страниц", "Начал читать новую интересную книгу"],
+//   },
+// ];
 
 function escPressHandler(evt) {
   if (evt.key === "Escape") {
@@ -55,6 +68,37 @@ function removeDay(day) {
 
 function addDay(comment) {
   activeElement.days.push(comment);
+}
+
+function disableForm(form) {
+  const submit = form.querySelector("[type='submit']");
+  const formInputs = form.querySelectorAll("input");
+  submit.setAttribute("disabled", true);
+  formInputs.forEach(el => el.setAttribute("disabled", true));
+  form.setAttribute("disabled", true);
+}
+
+function enableForm(form) {
+  const submit = form.querySelector("[type='submit']");
+  const formInputs = form.querySelectorAll("input");
+  submit.removeAttribute("disabled");
+  formInputs.forEach(el => el.removeAttribute("disabled"));
+  form.removeAttribute("disabled");
+}
+
+function calcPercent() {
+  const isDisabled = dayForm.getAttribute("disabled");
+  const progress = Math.floor(activeElement.days.length / DAYS_TO_FINISH * 100);
+  percent.textContent = `${progress}%`;
+  indicator.setAttribute("style", `--barWidth: ${progress}%`);
+  
+  if (progress >= 100) {
+    disableForm(dayForm);
+    return;
+  }
+  if (isDisabled) {
+    enableForm(dayForm);
+  }
 }
 
 function renderDayCounter(num) {
@@ -123,6 +167,8 @@ function updateContent() {
   days.map((day, index) => {
     daysList.append(renderDay(day, index));
   });
+  calcPercent();
+  localStorage.setItem("habbits", JSON.stringify(habbits));
 }
 
 function setActive(id) {
