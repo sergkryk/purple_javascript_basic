@@ -224,7 +224,8 @@ function init() {
     openModal();
   });
 
-  closeModalButton.addEventListener("click", () => {
+  closeModalButton.addEventListener("click", (evt) => {
+    evt.preventDefault();
     closeModal();
   });
 
