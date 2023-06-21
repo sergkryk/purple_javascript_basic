@@ -276,6 +276,7 @@ form[disabled="true"] {
 }
 .nav__logo {
   margin-bottom: 48px;
+  color: #5051f9;
 }
 .nav__items {
   margin: 0;

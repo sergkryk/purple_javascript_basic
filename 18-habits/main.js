@@ -27,24 +27,24 @@ let activeElement = "";
 
 const DAYS_TO_FINISH = 21;
 
-const habbits = JSON.parse(localStorage.getItem("habbits")) || [];
+// const habbits = JSON.parse(localStorage.getItem("habbits"));
 
-// const habbits = [
-//   {
-//     id: 1687273794339,
-//     title: "Отжимания",
-//     aim: "Научится отжиматься",
-//     icon: "dumble",
-//     days: ["Первый подход всегда даётся тяжело"],
-//   },
-//   {
-//     id: 1687273864156,
-//     title: "Чтение",
-//     aim: "Читать не менее 30 минут в день",
-//     icon: "bottle",
-//     days: ["Прочитал 20 страниц", "Начал читать новую интересную книгу"],
-//   },
-// ];
+const template = [
+  {
+    id: 1687273794339,
+    title: "Отжимания",
+    aim: "Научится отжиматься",
+    icon: "dumble",
+    days: ["Первый подход всегда даётся тяжело"],
+  },
+  {
+    id: 1687273864156,
+    title: "Чтение",
+    aim: "Читать не менее 30 минут в день",
+    icon: "bottle",
+    days: ["Прочитал 20 страниц", "Начал читать новую интересную книгу"],
+  },
+];
 
 function escPressHandler(evt) {
   if (evt.key === "Escape") {
@@ -74,7 +74,7 @@ function disableForm(form) {
   const submit = form.querySelector("[type='submit']");
   const formInputs = form.querySelectorAll("input");
   submit.setAttribute("disabled", true);
-  formInputs.forEach(el => el.setAttribute("disabled", true));
+  formInputs.forEach((el) => el.setAttribute("disabled", true));
   form.setAttribute("disabled", true);
 }
 
@@ -82,16 +82,18 @@ function enableForm(form) {
   const submit = form.querySelector("[type='submit']");
   const formInputs = form.querySelectorAll("input");
   submit.removeAttribute("disabled");
-  formInputs.forEach(el => el.removeAttribute("disabled"));
+  formInputs.forEach((el) => el.removeAttribute("disabled"));
   form.removeAttribute("disabled");
 }
 
 function calcPercent() {
   const isDisabled = dayForm.getAttribute("disabled");
-  const progress = Math.floor(activeElement.days.length / DAYS_TO_FINISH * 100);
+  const progress = Math.floor(
+    (activeElement.days.length / DAYS_TO_FINISH) * 100
+  );
   percent.textContent = `${progress}%`;
   indicator.setAttribute("style", `--barWidth: ${progress}%`);
-  
+
   if (progress >= 100) {
     disableForm(dayForm);
     return;
@@ -118,7 +120,8 @@ function renderDayComment(comment) {
 function renderDayDelete(day) {
   const button = document.createElement("button");
   button.classList.add("habbit__delete");
-  button.innerHTML = '<svg width="18" height="19" fill="none"><use xlink:href="#icon-trash"></use></svg>';
+  button.innerHTML =
+    '<svg width="18" height="19" fill="none"><use xlink:href="#icon-trash"></use></svg>';
   button.setAttribute("type", "button");
   button.addEventListener("click", () => {
     removeDay(day);
@@ -151,16 +154,18 @@ function renderNavItem(habbit) {
 
 function updateNavigation() {
   navigation.innerHTML = "";
-  habbits.map(renderNavItem).forEach((el) => {
-    navigation.append(el);
-  });
+  if (habbits.length > 0) {
+    habbits.map(renderNavItem).forEach((el) => {
+      navigation.append(el);
+    });
+  }
 }
 
 function updateContent() {
   const { title, days } = activeElement;
   const daysList = document.querySelector(".habbit__days");
   const counter = document.querySelector(".js-counter");
-  
+
   mainTitle.textContent = title;
   counter.textContent = `День ${days.length + 1}`;
   daysList.innerHTML = "";
@@ -182,7 +187,7 @@ function setActive(id) {
   if (activeDomNode && activeDomNode.classList.contains(activeClass)) {
     activeDomNode.classList.remove(activeClass);
   }
-  
+
   active.classList.add(activeClass);
   activeDomNode = active;
   activeElement = habbits[index];
@@ -207,31 +212,43 @@ function processFormData(form) {
   return data;
 }
 
-// ИНИЦИАЛИЗАЦИЯ ПРИЛОЖЕНИЯ -------------------------------------------
+function updateStorageOnFirstRun() {
+  if (localStorage.getItem('habbits')) {
+    return;
+  }
+  localStorage.setItem("habbits", JSON.stringify(template));
+}
 
-addButton.addEventListener("click", () => {
-  openModal();
-});
+function init() {
+  addButton.addEventListener("click", () => {
+    openModal();
+  });
 
-closeModalButton.addEventListener("click", () => {
-  closeModal();
-});
+  closeModalButton.addEventListener("click", () => {
+    closeModal();
+  });
 
-habbitForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  const newHabbit = processFormData(habbitForm);
-  addHabbit(newHabbit);
-  closeModal();
-});
+  habbitForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    const newHabbit = processFormData(habbitForm);
+    addHabbit(newHabbit);
+    closeModal();
+  });
 
-dayForm.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  const { comment } = processFormData(dayForm);
-  addDay(comment);
-  updateContent();
-});
+  dayForm.addEventListener("submit", (evt) => {
+    evt.preventDefault();
+    const { comment } = processFormData(dayForm);
+    addDay(comment);
+    updateContent();
+  });
 
-window.addEventListener("load", () => {
   updateNavigation();
-  setActive(habbits[0].id);
-});
+
+  if (habbits.length > 0) {
+    setActive(habbits[0].id);
+  }
+}
+
+updateStorageOnFirstRun();
+const habbits = JSON.parse(localStorage.getItem("habbits")) || [];
+document.addEventListener("DOMContentLoaded", init);
